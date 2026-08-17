@@ -1,124 +1,137 @@
 # AIO Media Tool
 
-AIO Media Tool ist eine lokale Desktop-App für Medien, Dateien und Dokumente. Die Idee dahinter ist simpel: kleinere Aufgaben, für die sonst mehrere Programme nötig wären, in einer Oberfläche zusammenzufassen.
+AIO Media Tool is a Windows desktop application that combines a collection of useful media, file, and document tools in one place.
 
-> **Aktueller Stand:** 0.3.14 / Alpha
+> **Current version:** 0.3.14 / Alpha
 
-## Windows-Download
+The project is already usable, but it is still in active development and some features depend on external tools.
 
-Für normale Nutzer ist die fertige **`AIO-Media-Tool.exe`** gedacht. Dafür werden weder Python noch `uv` benötigt.
+## Download
 
-Die Release-Version wird als einzelne Datei gebaut. Beim Start legt die App ihre Einstellungen, Logs und lokalen Daten wie gewohnt unter dem Benutzerprofil ab; neben der EXE muss kein Programmordner liegen.
+For normal use, download **`AIO-Media-Tool.exe`** from the latest GitHub Release and run it.
 
-**Wichtig:** FFmpeg/FFprobe und einige Spezialwerkzeuge werden aktuell nicht in die EXE eingebettet. Medienfunktionen, die FFmpeg benötigen, setzen daher weiterhin eine FFmpeg-Installation im `PATH` voraus. Tesseract, Real-ESRGAN und RIFE sind ebenfalls optional externe Werkzeuge.
+The release is built as a single executable. Python, `uv`, and a separate installation folder are not required on the target PC.
 
-## Funktionen
+Some features still require external programs such as FFmpeg, Tesseract, Real-ESRGAN, or RIFE.
 
-### Medien
+## Features
 
-- Video- und Audio-Downloads über `yt-dlp`
-- Playlist-Vorschau mit Auswahl einzelner Einträge
-- MP3-Tags, Cover, Lyrics, Normalisierung und Merging
-- Bildoptimierung und Skalierung
-- Video-Kompression mit H.264, HEVC, AV1 oder VP9
-- CPU-Encoding und NVIDIA NVENC
-- Video-Cutter mit mehreren Segmenten und Frame-Navigation
-- GIF-Export aus Videoausschnitten
+### Media
 
-### Dateien & Dokumente
+* Video and audio downloads using `yt-dlp`
+* Playlist preview and individual item selection
+* MP3 tags, cover art, lyrics, normalization, and merging
+* Image optimization and resizing
+* Video compression with H.264, HEVC, AV1, or VP9
+* CPU encoding and NVIDIA NVENC support
+* Video cutter with multiple segments and frame navigation
+* GIF export from video clips
 
-- PDFs zusammenführen, teilen, drehen, komprimieren, schützen und entsperren
-- Bulk-Renamer mit Vorschau und Konfliktprüfung
-- Metadaten aus Bildern, Audio, Video und PDFs entfernen
-- Sammlungsboard für Notizen, Bilder und YouTube-Links
-- verschlüsselte Vault-Archive mit AES-256-GCM
+### Files and documents
 
-### Optional
+* Merge, split, rotate, compress, protect, and unlock PDFs
+* Bulk file renaming with preview and conflict checking
+* Remove metadata from images, audio, video, and PDF files
+* Collection board for notes, images, and YouTube links
+* Encrypted vault archives using AES-256-GCM
 
-- Transkription mit `faster-whisper`
-- OCR über Tesseract
-- Übersetzung über DeepL oder ein lokales Modell
-- Upscaling mit Real-ESRGAN
-- Frame-Interpolation mit RIFE
-- lokaler Clipboard-Verlauf
+### Optional tools
 
-## EXE selbst bauen
+* Transcription with `faster-whisper`
+* OCR using Tesseract
+* Translation using DeepL or a local model
+* Upscaling with Real-ESRGAN
+* Frame interpolation with RIFE
+* Local clipboard history
 
-### Einfach unter Windows
+## Building the Windows EXE
 
-`build_windows.bat` im Hauptordner doppelklicken. Die Datei findet ihren Projektordner selbst; ein fester Pfad muss nicht eingetragen werden.
+The easiest way to build the application on Windows is to run:
 
-Das Skript erstellt eine eigene `.build-venv`, installiert die Build-Abhängigkeiten und erzeugt anschließend direkt die EXE. Die Tests blockieren einen normalen lokalen Build nicht mehr; GitHub Actions führt sie weiterhin vor jedem automatischen Build aus.
+```text
+build_windows.bat
+```
+
+The script creates its own build environment, installs the required dependencies, and produces:
 
 ```text
 dist\AIO-Media-Tool.exe
 ```
 
-Diese Datei kann danach alleine weitergegeben werden. Python und die virtuelle Umgebung werden auf dem Ziel-PC nicht gebraucht.
+The resulting EXE can be used on another Windows PC without installing Python.
 
-Zum Bauen selbst wird Python 3.11 bis 3.13 benötigt. Wer lokal vor dem Build zusätzlich die Tests ausführen möchte, kann `build_windows.bat --test` in einer Eingabeaufforderung starten.
+Python 3.11 to 3.13 is required to build the application.
 
-### Manuell
+To run the test suite before building:
+
+```text
+build_windows.bat --test
+```
+
+### Manual build
 
 ```bash
 uv sync --locked --extra dev --extra transcription --extra ocr
 uv run --no-sync python scripts/build.py
 ```
 
-Der Build verwendet PyInstaller im `--onefile`- und `--windowed`-Modus.
+The Windows release uses PyInstaller in `--onefile` and `--windowed` mode.
 
 ## GitHub Actions
 
-Das Repository enthält `.github/workflows/windows-exe.yml`. Bei einem Push auf `main`, einem `v...`-Tag oder per manuellem Start in GitHub Actions wird die Windows-EXE automatisch gebaut und als Artifact hochgeladen.
+The repository includes a Windows build workflow at:
 
-Damit muss für einen öffentlichen Release nicht auf dem eigenen PC gebaut werden.
-
-## Source-Version starten
-
-Wer am Code arbeitet, kann weiterhin `start.bat` beziehungsweise `start.sh` verwenden. Unter Windows findet `start.bat` seinen Projektordner selbst und legt beim ersten Start eine lokale `.venv` an. Ein fest eingetragener Installationspfad ist nicht nötig.
-
-```bat
-start.bat
+```text
+.github/workflows/windows-exe.yml
 ```
 
-oder manuell:
+The workflow runs the test suite, builds `AIO-Media-Tool.exe`, and uploads it as a GitHub Actions artifact.
 
-```bash
-uv sync --locked --extra transcription --extra ocr
-uv run --no-sync aio-media-tool
+Pushing a version tag such as:
+
+```text
+v0.3.14
 ```
 
-## Externe Werkzeuge
+also creates or updates the matching GitHub Release and attaches the Windows EXE automatically.
 
-Einige Funktionen starten andere Programme lokal. Je nach Nutzung werden benötigt:
+## External tools
 
-- **FFmpeg + FFprobe** für viele Audio- und Videofunktionen
-- **Tesseract** für OCR
-- **ExifTool** für zusätzliche Metadaten-Prüfungen
-- **realesrgan-ncnn-vulkan** für Upscaling
-- **rife-ncnn-vulkan** für Frame-Interpolation
+Depending on which features you use, you may need:
 
-Die Pfade zu Tesseract und den KI-Werkzeugen können in der App eingestellt werden.
+* **FFmpeg + FFprobe** — audio and video processing
+* **Tesseract** — OCR
+* **ExifTool** — additional metadata inspection
+* **realesrgan-ncnn-vulkan** — image upscaling
+* **rife-ncnn-vulkan** — frame interpolation
+
+Paths for Tesseract and the AI tools can be configured inside the application.
 
 ## Updates
 
-Der Git-basierte Updater ist nur für Source-Checkouts gedacht. In der fertigen EXE ist er deaktiviert, weil eine Release-Datei nicht selbst an ihrem Git-Repository oder ihrer Python-Umgebung herumschreiben soll.
+The Git-based updater is intended for source checkouts only and is disabled in packaged EXE releases.
 
-Für neue Release-Versionen wird einfach die neue `AIO-Media-Tool.exe` verwendet.
+To update the packaged application, download the latest `AIO-Media-Tool.exe` from GitHub Releases.
 
-## Datenschutz
+## Privacy
 
-Die eigentliche Medien- und Dateiverarbeitung läuft lokal. Es gibt keine eingebaute Telemetrie.
+Media and file processing is performed locally and the application does not include telemetry.
 
-Netzwerkzugriffe entstehen nur bei Funktionen, die sie tatsächlich brauchen, zum Beispiel Downloads, DeepL oder bewusst erlaubte Modell-Downloads.
+Network access is only used by features that require it, such as downloads, DeepL translation, or explicitly requested model downloads.
 
-## Hinweis zu Downloads
+## Download notice
 
-Die Download-Funktionen sind für Inhalte gedacht, die du herunterladen und speichern darfst. Die App ist nicht dafür ausgelegt, DRM, Logins, Paywalls oder andere Zugriffsschutzmaßnahmen zu umgehen.
+Download features are intended for content you are allowed to download and store.
 
-## Startfehler der EXE
+The application is not designed to bypass DRM, authentication, paywalls, or other access restrictions.
 
-Wenn eine gebaute EXE schon beim Start abstürzt, zeigt die Release-Version jetzt einen Fehlerdialog an und schreibt die genaue Python-Fehlermeldung nach `%LOCALAPPDATA%\AIO Media Tool\logs\startup_error.log`. Dadurch verschwindet ein Fehler bei einem `--windowed`-Build nicht mehr einfach unsichtbar.
+## Startup errors
+
+If the packaged EXE crashes during startup, the application writes the error details to:
+
+```text
+%LOCALAPPDATA%\AIO Media Tool\logs\startup_error.log
+```
 
 ## Tests
 
@@ -127,6 +140,7 @@ uv sync --locked --extra dev --extra transcription --extra ocr
 uv run --no-sync pytest
 ```
 
-## Lizenz
+## License
 
-MIT License. Siehe `LICENSE`.
+Licensed under the MIT License. See [`LICENSE`](LICENSE) for details.
+
