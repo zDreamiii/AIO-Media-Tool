@@ -1,0 +1,52 @@
+[project]
+name = "aio-media-tool"
+version = "0.3.14"
+description = "Native Desktop-Werkzeugkiste für Medien, Dateien, Dokumente und Wissensboards"
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "cryptography>=44.0,<47",
+    "Pillow>=11.0,<13",
+    "PySide6>=6.8,<7",
+    "mutagen>=1.47,<2",
+    "pypdf[crypto]>=5.0,<7",
+    "python-docx>=1.1,<2",
+    "yt-dlp>=2025.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pyinstaller>=6.11,<7",
+    "pytest>=8.3,<10",
+    "ruff>=0.9,<1",
+]
+avif = ["pillow-avif-plugin>=1.5,<2"]
+transcription = ["faster-whisper>=1.1,<2"]
+ocr = ["PyMuPDF>=1.25,<2"]
+local-translation = [
+    "sentencepiece>=0.2,<1",
+    "transformers>=4.48,<6",
+]
+
+[project.scripts]
+aio-media-tool = "aio_media_tool.main:main"
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["aio_media_tool"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["E501"]

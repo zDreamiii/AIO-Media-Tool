@@ -1,0 +1,41 @@
+# Python / uv
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.uv-cache/
+
+# IDEs
+.idea/
+.vscode/
+
+# Lokale Umgebungsdateien / Secrets
+.env
+.env.*
+!.env.example
+
+# Builds
+build/
+dist/
+*.spec
+
+# AIO Media Tool runtime files
+.aio-update.log
+.update-state.json
+diagnose-*.zip
+.smoke-data/
+.qa/
+qa-*/
+pytest-of-root/
+tmp*/
+.task-tmp/
+ui-smoke.png
+
+# Betriebssystem
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local Windows build environment
+.build-venv/
